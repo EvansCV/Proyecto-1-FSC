@@ -5,99 +5,7 @@
 # Fecha de entrega: jueves 24 de octubre, 2024.
 
 # Fecha de actualización 1: miércoles 09 de octubre, 2024
-# Versión: Beta: 0.0.1
-
-# Import the Pygame library and initialize it
-'''import pygame
-pygame.init()
-
-# Constantes
-ancho_pantalla = 1025
-alto_pantalla = 1200
-ancho_boton = 140
-alto_boton = 40
-botonx = 30
-botony = 30
-blanco = (255, 255, 255)
-negro = (20, 20, 20)
-
-# Initialize the Pygame mixer for playing music
-pygame.mixer.init()
-
-# Create the main window with a size of SCREEN_WIDTHxSCREEN_HEIGHT pixels
-pantalla = pygame.display.set_mode((ancho_pantalla, alto_pantalla))
-
-# Load the background image
-fondo = pygame.image.load("8-bit style pinball game interface.png")
-
-# Load the background music and start playing it
-try:
-    pista1 = pygame.mixer.music.load("Slushii - LUV U NEED U [Monstercat Release].mp3")
-    pygame.mixer.music.play(-1)
-except pygame.error as e:
-    print(f"Error loading music file: {e}")
-
-# Set the font for the button text
-fuente = pygame.font.Font(None, 36)
-
-# Crea la ventana "Acerca de"
-ventana_about = pygame.Surface((600, 400))
-font = pygame.font.Font(None, 24)
-titulo = font.render("Sobre nosotros", True, blanco)
-ventana_about.blit(titulo, (20, 20))
-autores = font.render("Autores: Evans Corrales Valverde y Edgar Hernández Fállas", True, blanco)
-ventana_about.blit(autores, (20, 40))
-
-
-# Función para dibujar el fondo.
-def dibujar_fondo(pantalla, fondo):
-    pantalla.blit(fondo, (0, 0))
-
-# Function to draw the button
-def dibujar_boton_acerca_de(pantalla, fuente, ejex, ejey, ancho, alto):
-    pygame.draw.rect(pantalla, blanco, (ejex, ejey, ancho, alto))
-    # Llena el botón con color negro.
-    pygame.draw.rect(pantalla, negro, (ejex + 2, ejey + 2, ancho - 4, alto - 4))  
-
-    button_surf = fuente.render("Acerca de", True, blanco)
-    pantalla.blit(button_surf, (ejex + 10, ejey + 10))
-
-    pygame.display.flip()  # Actualiza la pantalla
-
-
-# Dibuja el fondo del
-dibujar_fondo(pantalla, fondo)
-
-# Dibuja el boton acerca_de 
-dibujar_boton_acerca_de(pantalla, fuente, botonx, botony, ancho_boton, alto_boton)
-
-# Main game loop
-clock = pygame.time.Clock()
-running = True
-while running:
-    # Manejo de eventos
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            running = False
-        elif evento.type == pygame.MOUSEBUTTONDOWN:
-            # Comprueba si el botón ha sido presionado 
-            if botonx <= evento.pos[0] <= botonx + ancho_boton and botony <= evento.pos[1] <= botony + alto_boton:
-                # Despliega la ventana de "Acerca de"
-                acercade_open = True
-                pantalla.blit(ventana_about, (ancho_pantalla // 2 - 300, alto_pantalla // 2 - 450)) 
-        elif evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_ESCAPE:
-                acercade_open = False
-
-if acercade_open:
-    pantalla.blit(ventana_about, (ancho_pantalla // 2 - 200, alto_pantalla // 2 -150))
-
-    # Actualiza la interfaz.
-    pygame.display.flip()
-    clock.tick(60)  # Control the game speed
-
-# Quit Pygame
-pygame.quit()'''
+# Versión: Beta: 0.2.0
 
 # Import the Pygame library and initialize it
 import pygame
@@ -132,13 +40,20 @@ except pygame.error as e:
 # Set the font for the button text
 fuente = pygame.font.Font(None, 36)
 
-# Create the "Acerca de" window
+# Ventana acerca de y sus características.
 ventana_about = pygame.Surface((600, 400))
 font = pygame.font.Font(None, 24)
-titulo = font.render("Sobre nosotros", True, blanco)
+titulo = font.render("CES Pinball", True, blanco)
 ventana_about.blit(titulo, (20, 20))
 autores = font.render("Autores: Evans Corrales Valverde y Edgar Hernández Fállas", True, blanco)
 ventana_about.blit(autores, (20, 40))
+version = font.render("Versión: Beta 0.2.0", True, blanco)
+ventana_about.blit(version, (20, 60))
+escuela = font.render("Ingeniería en Computadores", True, blanco)
+ventana_about.blit(escuela, (20, 80))
+esc = font.render("Presione esc para salir", True, blanco)
+ventana_about.blit(esc, (380, 350))
+
 
 # Function to draw the background
 def dibujar_fondo(pantalla, fondo):
@@ -151,42 +66,100 @@ def dibujar_boton_acerca_de(pantalla, fuente, ejex, ejey, ancho, alto):
     button_surf = fuente.render("Acerca de", True, blanco)
     pantalla.blit(button_surf, (ejex + 10, ejey + 10))
 
-# Draw the background
-dibujar_fondo(pantalla, fondo)
 
-# Draw the button
-dibujar_boton_acerca_de(pantalla, fuente, botonx, botony, ancho_boton, alto_boton)
-
-# Main game loop
 clock = pygame.time.Clock()
 running = True
 acercade_open = False  # Initialize the variable to track the "Acerca de" window state
 
-while running:
-    # Event handling
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            running = False
-        elif evento.type == pygame.MOUSEBUTTONDOWN:
-            # Check if the button has been pressed 
-            if botonx <= evento.pos[0] <= botonx + ancho_boton and botony <= evento.pos[1] <= botony + alto_boton:
-                # Display the "Acerca de" window
-                acercade_open = True
-        elif evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_ESCAPE:  # Correctly check for the Escape key
-                acercade_open = False
 
-    # Clear the screen and redraw the background and button
-    dibujar_fondo(pantalla, fondo)
-    dibujar_boton_acerca_de(pantalla, fuente, botonx, botony, ancho_boton, alto_boton)
+# Función de selección de jugadores
+# Add a button for changing player selection
+def dibujar_boton_cambiar_jugador(pantalla, fuente, ejex, ejey, ancho, alto):
+    pygame.draw.rect(pantalla, blanco, (ejex, ejey, ancho + 84, alto))
+    pygame.draw.rect(pantalla, negro, (ejex + 2, ejey + 2, ancho + 80, alto - 4))  
+    button_surf = fuente.render("Cambiar Jugador", True, blanco)
+    pantalla.blit(button_surf, (ejex + 10, ejey + 10))
 
-    # If the "Acerca de" window is open, draw it
-    if acercade_open:
-        pantalla.blit(ventana_about, (ancho_pantalla // 2 - 300, alto_pantalla // 2 - 500))
+# Modify the game loop to include the button
+def game(running, botonx, ancho_boton, botony, alto_boton):
+    global acercade_open, jugadores, jugador_seleccionado
+    jugador_seleccionado = 0  # Initialize player selection
+    jugadores = ["Jugador 1", "Jugador 2"]
+    
+    while running:
+        # Event handling
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                running = False
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                # Check if the button acerca_de has been pressed 
+                if botonx <= evento.pos[0] <= botonx + ancho_boton and botony <= evento.pos[1] <= botony + alto_boton:
+                    # Display the "Acerca de" window
+                    acercade_open = True
+                # Check if the change player button has been pressed
+                if 30 <= evento.pos[0] <= 30 + ancho_boton and 100 <= evento.pos[1] <= 100 + alto_boton:
+                    seleccion()  # Call the selection function
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    acercade_open = False
 
-    # Update the interface
-    pygame.display.flip()
-    clock.tick(60)  # Control the game speed
+        # Clear the screen and redraw the background and button
+        dibujar_fondo(pantalla, fondo)
+        dibujar_boton_acerca_de(pantalla, fuente, botonx, botony, ancho_boton, alto_boton)
+        dibujar_boton_cambiar_jugador(pantalla, fuente, 30, 100, ancho_boton, alto_boton)  # Draw the change player button
+
+        # If the "Acerca de" window is open, draw it
+        if acercade_open:
+            pantalla.blit(ventana_about, (ancho_pantalla // 2 - 300, alto_pantalla // 2 - 500))
+        else:
+            dibujar_fondo(pantalla, fondo)
+            dibujar_boton_acerca_de(pantalla, fuente, botonx, botony, ancho_boton, alto_boton)
+            dibujar_boton_cambiar_jugador(pantalla, fuente, 30, 100, ancho_boton, alto_boton)  # Draw the change player button
+
+        # Update the interface
+        pygame.display.flip()
+        clock.tick(60)  # Control the game speed
+
+# Modify the seleccion function to allow quitting
+def seleccion():
+    global jugador_seleccionado, jugadores
+    estado_seleccion = True  # Variable that determines the state of player selection
+    while estado_seleccion:
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                estado_seleccion = False
+                return  # Exit the function if the game is closed
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_UP:
+                    jugador_seleccionado = (jugador_seleccionado - 1) % 2  # Cycle left
+                elif evento.key == pygame.K_DOWN:
+                    jugador_seleccionado = (jugador_seleccionado + 1) % 2  # Cycle right
+                elif evento.key == pygame.K_RETURN:
+                    # Here you can handle the selection (e.g., start the game)
+                    print(f"{jugadores[jugador_seleccionado]} seleccionado.")
+                    estado_seleccion = False  # Exit the selection window
+
+        # Clear the screen
+        dibujar_fondo(pantalla, fondo)
+
+        # Draw the player selection text
+        font = pygame.font.Font(None, 48)
+        title = font.render("Selecciona tu jugador", True, blanco)
+        pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 100))
+
+        # Highlight the selected player
+        for i, name in enumerate(jugadores):
+            color = blanco if i == jugador_seleccionado else negro
+            texto_jugador = font.render(name, True, color)
+            pantalla.blit(texto_jugador, (ancho_pantalla // 2 - texto_jugador.get_width() // 2, alto_pantalla // 2 + i * 50))
+
+        # Update the display
+        pygame.display.flip()
+        clock.tick(60)  # Control the game speed
+
+# Ahora toca continuar con la configuración inicial.
+
+game(running, botonx, ancho_boton, botony, alto_boton)
 
 # Quit Pygame
 pygame.quit()
