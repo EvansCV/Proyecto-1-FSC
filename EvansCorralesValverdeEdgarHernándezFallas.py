@@ -107,6 +107,7 @@ def game(running, botonx, ancho_boton, botony, alto_boton):
         dibujar_fondo(pantalla, fondo)
         dibujar_boton_acerca_de(pantalla, fuente, botonx, botony, ancho_boton, alto_boton)
         dibujar_boton_cambiar_jugador(pantalla, fuente, 30, 100, ancho_boton, alto_boton)  # Draw the change player button
+        jugador_en_turno(pantalla, jugador_seleccionado)
 
         # If the "Acerca de" window is open, draw it
         if acercade_open:
@@ -115,6 +116,7 @@ def game(running, botonx, ancho_boton, botony, alto_boton):
             dibujar_fondo(pantalla, fondo)
             dibujar_boton_acerca_de(pantalla, fuente, botonx, botony, ancho_boton, alto_boton)
             dibujar_boton_cambiar_jugador(pantalla, fuente, 30, 100, ancho_boton, alto_boton)  # Draw the change player button
+            jugador_en_turno(pantalla, jugador_seleccionado)
 
         # Update the interface
         pygame.display.flip()
@@ -155,7 +157,27 @@ def seleccion():
 
         # Update the display
         pygame.display.flip()
-        clock.tick(60)  # Control the game speed
+        clock.tick(60)  # Control the game spe90
+# Representación del jugador en turno.
+jugador1_imagen = pygame.image.load("Gon from HunterxHunter, 8-bit style, head only, looking left.png")
+jugador2_imagen = pygame.image.load("la cabeza de Killua de HunterxHunter en 2d, con un estilo de 8bits.png")
+
+def jugador_en_turno(pantalla, jugador_seleccionado):
+    pygame.draw.rect(pantalla, blanco, (825, 10, 180, 150))
+    pygame.draw.rect(pantalla, negro, (815, 12, 190, 145))
+    
+    # Determinando la imagen del jugador. 
+    if jugador_seleccionado == 0:
+        imagen_jugador = jugador1_imagen
+    else:
+        imagen_jugador = jugador2_imagen
+
+    # Adimensionar la imagen para que se acople a las del rectangulo.
+    imagen_jugador = pygame.transform.scale(imagen_jugador, (170, 140))
+
+    # Desplegar la imagen del jugador.
+    pantalla.blit(imagen_jugador, (830, 15))
+
 
 # Ahora toca continuar con la configuración inicial.
 
