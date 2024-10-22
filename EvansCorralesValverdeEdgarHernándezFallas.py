@@ -191,48 +191,86 @@ def jugador_en_turno(pantalla, jugador_seleccionado):
     pantalla.blit(imagen_jugador, (830, 15))
 
 
-# Ahora toca continuar con la configuración inicial.
+# Ahora toca continuar con la configuración inicial. Por terminar.
+
+
 def config_inicial(ver_config):
-    if ver_config == True:
+    if ver_config:
         return
     else:
-        # Dibuja el fondo 
-        dibujar_fondo(pantalla, fondo_configuracion_inicial)
-        # Draw a title
-        font = pygame.font.Font(None, 48)
-
-        title = font.render("Configuración Inicial", True, blanco)
-        pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 200))
-
-        ces = font.render("CES Pinball", True, blanco)
-        pantalla.blit(ces, (ancho_pantalla // 2 - (title.get_width() // 2 - 60), alto_pantalla // 2 - 400))
-
-
-        # Draw a start button
-        pygame.draw.rect(pantalla, blanco, (ancho_pantalla // 2 - 100, alto_pantalla// 2, 210,  40))
-        pygame.draw.rect(pantalla, negro, (ancho_pantalla // 2 - 102, alto_pantalla// 2 + 2, 210, 36))
-        start_text = font.render("Iniciar Juego", True, blanco)
-        pantalla.blit(start_text, (ancho_pantalla // 2 - start_text.get_width() // 2, alto_pantalla // 2 + 5))
-
-
-        # Update the display
-        pygame.display.flip()
-
-        # Wait for user to click the start button
+        opciones = ["Iniciar Juego", "Opciones de juego", "Salir"]
+        seleccion = 0  # Track the currently selected option
         waiting = True
+
         while waiting:
+            # Draw the configuration background
+            dibujar_fondo(pantalla, fondo_configuracion_inicial)
+
+            # Draw the title
+            font = pygame.font.Font(None, 48)
+            title = font.render("Configuración Inicial", True, blanco)
+            pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 200))
+
+            # Draw options
+            for index, opcion in enumerate(opciones):
+                color = blanco if index == seleccion else negro
+                option_text = font.render(opcion, True, color)
+                pantalla.blit(option_text, (ancho_pantalla // 2 - option_text.get_width() // 2, alto_pantalla // 2 + index * 50))
+
+            # Update the display
+            pygame.display.flip()
+
+            # Event handling
             for evento in pygame.event.get():
                 if evento.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-                elif evento.type == pygame.MOUSEBUTTONDOWN:
-                    # Check if the start button is clicked
-                    if (ancho_pantalla // 2 - 70 <= evento.pos[0] <= ancho_pantalla // 2 + 70 and
-                            alto_pantalla // 2 <= evento.pos[1] <= alto_pantalla // 2 + 40):
-                        waiting = False  # Exit the waiting loop
+                elif evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_UP:
+                        seleccion = (seleccion - 1) % len(opciones)  # Move up the list
+                    elif evento.key == pygame.K_DOWN:
+                        seleccion = (seleccion + 1) % len(opciones)  # Move down the list
+                    elif evento.key == pygame.K_RETURN:
+                        if seleccion == 0:  # Start the game
+                            waiting = False
+                        elif seleccion == 1:
+                            seleccion_modo_juego = modo_juego()
+                        elif seleccion == 2:  # Exit option
+                            pygame.quit()
+                            exit()
+
+def modo_juego():
+    selecto = False
+    while not selecto:
+        seleccion_modo_juego = 0
+        dibujar_fondo(pantalla, fondo_configuracion_inicial)
+        font = pygame.font.Font(None, 48)
+        title = font.render("Opciones de juego", True, blanco)
+        pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 200))
+        opciones_juego = ["1 jugador", "2 jugadores"]
+        for index, opcion_juego in enumerate(opciones_juego):
+            color = blanco if index == seleccion_modo_juego else negro
+            option_mode_text =  font.render(opcion_juego, True, color)
+            pantalla.blit(option_mode_text, (ancho_pantalla // 2 - option_mode_text.get_width() + 80,
+            alto_pantalla // 2 + index * 50 + 100))
+        pygame.display.flip()
+        for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()   
+                    exit()
+                elif evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_UP:
+                        seleccion_modo_juego = (seleccion_modo_juego - 1) % len(opciones_juego)  # Move up the list
+                    elif evento.key == pygame.K_DOWN:
+                        seleccion_modo_juego = (seleccion_modo_juego + 1) % len(opciones_juego)  # Move down the list
+                    elif evento.key == pygame.K_RETURN:
+                        if seleccion_modo_juego == 0:  # Choose the option
+                            selecto = True
+                            return seleccion_modo_juego
 
 
 game(running, botonx, ancho_boton, botony, alto_boton)
 
 # Quit Pygame
 pygame.quit()
+
