@@ -21,6 +21,9 @@ botony = 30
 blanco = (255, 255, 255)
 negro = (20, 20, 20)
 
+# Varible que determina si la configuración inicial ya se realizó.
+ver_config = False
+
 # Initialize the Pygame mixer for playing music
 pygame.mixer.init()
 
@@ -31,11 +34,11 @@ pantalla = pygame.display.set_mode((ancho_pantalla, alto_pantalla))
 fondo = pygame.image.load("8-bit style pinball game interface.png")
 
 # Load the background music and start playing it
-try:
+'''try:
     pista1 = pygame.mixer.music.load("Slushii - LUV U NEED U [Monstercat Release].mp3")
     pygame.mixer.music.play(-1)
 except pygame.error as e:
-    print(f"Error loading music file: {e}")
+    print(f"Error loading music file: {e}")'''
 
 # Set the font for the button text
 fuente = pygame.font.Font(None, 36)
@@ -54,10 +57,12 @@ ventana_about.blit(escuela, (20, 80))
 esc = font.render("Presione esc para salir", True, blanco)
 ventana_about.blit(esc, (380, 350))
 
+fondo_configuracion_inicial = pygame.image.load("un simple fondo liso celeste en estilo 8 bits sin figuras.png")
+
 
 # Function to draw the background
-def dibujar_fondo(pantalla, fondo):
-    pantalla.blit(fondo, (0, 0))
+def dibujar_fondo(pantalla, fondo_pantalla):
+    pantalla.blit(fondo_pantalla, (0, 0))
 
 # Function to draw the button
 def dibujar_boton_acerca_de(pantalla, fuente, ejex, ejey, ancho, alto):
@@ -82,9 +87,11 @@ def dibujar_boton_cambiar_jugador(pantalla, fuente, ejex, ejey, ancho, alto):
 
 # Modify the game loop to include the button
 def game(running, botonx, ancho_boton, botony, alto_boton):
-    global acercade_open, jugadores, jugador_seleccionado
+    global acercade_open, jugadores, jugador_seleccionado, ver_config 
     jugador_seleccionado = 0  # Initialize player selection
     jugadores = ["Jugador 1", "Jugador 2"]
+
+    ver_config = config_inicial(ver_config)
     
     while running:
         # Event handling
@@ -165,12 +172,17 @@ jugador2_imagen = pygame.image.load("la cabeza de Killua de HunterxHunter en 2d,
 def jugador_en_turno(pantalla, jugador_seleccionado):
     pygame.draw.rect(pantalla, blanco, (825, 10, 180, 150))
     pygame.draw.rect(pantalla, negro, (815, 12, 190, 145))
-    
+    font = pygame.font.Font(None, 38)
+    texto_jugador1 = font.render("Jugador 1", True, blanco)
+    texto_jugador2 = font.render("Jugador 2", True, blanco)
+
     # Determinando la imagen del jugador. 
     if jugador_seleccionado == 0:
         imagen_jugador = jugador1_imagen
+        pantalla.blit(texto_jugador1, (845, 165))
     else:
         imagen_jugador = jugador2_imagen
+        pantalla.blit(texto_jugador2, (845, 165))
 
     # Adimensionar la imagen para que se acople a las del rectangulo.
     imagen_jugador = pygame.transform.scale(imagen_jugador, (170, 140))
@@ -180,6 +192,45 @@ def jugador_en_turno(pantalla, jugador_seleccionado):
 
 
 # Ahora toca continuar con la configuración inicial.
+def config_inicial(ver_config):
+    if ver_config == True:
+        return
+    else:
+        # Dibuja el fondo 
+        dibujar_fondo(pantalla, fondo_configuracion_inicial)
+        # Draw a title
+        font = pygame.font.Font(None, 48)
+
+        title = font.render("Configuración Inicial", True, blanco)
+        pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 200))
+
+        ces = font.render("CES Pinball", True, blanco)
+        pantalla.blit(ces, (ancho_pantalla // 2 - (title.get_width() // 2 - 60), alto_pantalla // 2 - 400))
+
+
+        # Draw a start button
+        pygame.draw.rect(pantalla, blanco, (ancho_pantalla // 2 - 100, alto_pantalla// 2, 210,  40))
+        pygame.draw.rect(pantalla, negro, (ancho_pantalla // 2 - 102, alto_pantalla// 2 + 2, 210, 36))
+        start_text = font.render("Iniciar Juego", True, blanco)
+        pantalla.blit(start_text, (ancho_pantalla // 2 - start_text.get_width() // 2, alto_pantalla // 2 + 5))
+
+
+        # Update the display
+        pygame.display.flip()
+
+        # Wait for user to click the start button
+        waiting = True
+        while waiting:
+            for evento in pygame.event.get():
+                if evento.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif evento.type == pygame.MOUSEBUTTONDOWN:
+                    # Check if the start button is clicked
+                    if (ancho_pantalla // 2 - 70 <= evento.pos[0] <= ancho_pantalla // 2 + 70 and
+                            alto_pantalla // 2 <= evento.pos[1] <= alto_pantalla // 2 + 40):
+                        waiting = False  # Exit the waiting loop
+
 
 game(running, botonx, ancho_boton, botony, alto_boton)
 
