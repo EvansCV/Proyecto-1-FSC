@@ -129,6 +129,7 @@ def game(running, botonx, ancho_boton, botony, alto_boton):
         pygame.display.flip()
         clock.tick(60)  # Control the game speed
 
+
 # Modify the seleccion function to allow quitting
 def seleccion():
     global jugador_seleccionado, jugadores
@@ -198,7 +199,7 @@ def config_inicial(ver_config):
     if ver_config:
         return
     else:
-        opciones = ["Iniciar Juego", "Opciones de juego", "Salir"]
+        opciones = ["Iniciar Juego", "Opciones de juego", "Ayuda", "Salir"]
         seleccion = 0  # Track the currently selected option
         waiting = True
 
@@ -208,6 +209,8 @@ def config_inicial(ver_config):
 
             # Draw the title
             font = pygame.font.Font(None, 48)
+            ces = font.render("CES Pinball", True, blanco)
+            pantalla.blit(ces, (420, 130))
             title = font.render("Configuración Inicial", True, blanco)
             pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 200))
 
@@ -231,22 +234,83 @@ def config_inicial(ver_config):
                     elif evento.key == pygame.K_DOWN:
                         seleccion = (seleccion + 1) % len(opciones)  # Move down the list
                     elif evento.key == pygame.K_RETURN:
-                        if seleccion == 0:  # Start the game
+                        if seleccion == 0:  # Comienza el juego
                             waiting = False
                         elif seleccion == 1:
                             seleccion_modo_juego = modo_juego()
-                        elif seleccion == 2:  # Exit option
+                        elif seleccion == 2:
+                            info_inicial()
+                        elif seleccion == 3:  # Exit option
                             pygame.quit()
                             exit()
 
+
+# Función información inical.
+# Esta función brindará información sobre el juego como tal.
+# Entradas: no posee entradas.
+# Salidas: no posee salidas.
+# Restricciones: no posee restricciones.
+ventana_info_inicial = pygame.Surface((800, 600))
+texto_info_inicial = ["El juego CES Pinball fue creado con la intención de incorporar la era digital con los juegos de arcade antiguos.",
+"Por lo mismo nos complace traer este juego que posee características de las máquinas conocidas como Pinball con la electrónica digital.",
+"El juego consiste en utilizar la maqueta que se le presenta a usted junto con el juego en pantalla.",
+"Actualmente se encuentra dentro de la pestaña de configuración inicial en la cual podrá seleccionar el modo de juego, para un jugador o dos jugadores", 
+"Una vez modo haya concluido con el modo de juego podrá irse a la pestaña de selección de personaje, la cual se realiza utilizando el potenciómetro de la maqueta.",
+"Una vez realizado, lo anterior podrá decidir si iniciar, el juego, cambiar de modo de juego, volver a seleccionar personajes o salir.",
+"Si desea iniciar el juego, entonces ahora podrá ver como se refleja en la pantalla el jugador en turno y la cantidad de tiros disponibles.",
+"Normalmente durante la ejecución del juego cada jugador posee tres tiros, una vez termina esos tres tiros cambia el turno."
+,"También se tiene en la pantalla la ventana de about o acerca por si desea conocer más sobre los creadores."]
+
+
+# Falta trabajar en el texto.
+def info_inicial():
+    global blanco, negro
+    salir = False
+    font = pygame.font.Font(None, 24)
+    
+    # Fill the info surface with a background color (optional)
+    ventana_info_inicial.fill(negro)  # Fill with black or any color you want
+
+    while not salir:
+        # Draw the info surface on the main screen
+        pantalla.blit(ventana_info_inicial, (200, 300))
+        
+        # Render the text
+        sobre_el_juego = font.render("Sobre el juego: Ces Pinball", True, blanco)    
+        ventana_info_inicial.blit(sobre_el_juego, (10, 10))  # Adjust the position as needed
+        espacio_inter = 30
+        for texto in texto_info_inicial:
+            texto_imp = font.render(texto, True, blanco)
+            ventana_info_inicial.blit(texto_imp, (10, espacio_inter))
+            espacio_inter += 20
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    salir = True  # Corrected assignment
+
+        # Update the display
+        pygame.display.flip()  # Ensure the display is updated
+
+
+
+
+# Función modo_juego.
+# Función que define el modo de juego en el que se irá a jugar.
+# Entradas: ninguna.
+# Salidas: el valor de la selección del modo de juego.
+# Restricciones: no posee restricciones
 def modo_juego():
     selecto = False
+    seleccion_modo_juego = 0
+    dibujar_fondo(pantalla, fondo_configuracion_inicial)
     while not selecto:
-        seleccion_modo_juego = 0
-        dibujar_fondo(pantalla, fondo_configuracion_inicial)
         font = pygame.font.Font(None, 48)
         title = font.render("Opciones de juego", True, blanco)
-        pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 200))
+        pantalla.blit(title, (ancho_pantalla // 2 - title.get_width() // 2, alto_pantalla // 2 - 350))
         opciones_juego = ["1 jugador", "2 jugadores"]
         for index, opcion_juego in enumerate(opciones_juego):
             color = blanco if index == seleccion_modo_juego else negro
@@ -260,13 +324,15 @@ def modo_juego():
                     exit()
                 elif evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_UP:
-                        seleccion_modo_juego = (seleccion_modo_juego - 1) % len(opciones_juego)  # Move up the list
+                        seleccion_modo_juego = 0  # Move up the list
                     elif evento.key == pygame.K_DOWN:
-                        seleccion_modo_juego = (seleccion_modo_juego + 1) % len(opciones_juego)  # Move down the list
+                        seleccion_modo_juego = 1  # Move down the list
                     elif evento.key == pygame.K_RETURN:
-                        if seleccion_modo_juego == 0:  # Choose the option
-                            selecto = True
-                            return seleccion_modo_juego
+                        print(seleccion_modo_juego)
+                        selecto = True
+                        return seleccion_modo_juego  # Choose the option
+                            
+
 
 
 game(running, botonx, ancho_boton, botony, alto_boton)
