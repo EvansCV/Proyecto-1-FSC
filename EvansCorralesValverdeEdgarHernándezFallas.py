@@ -262,6 +262,30 @@ texto_info_inicial = ["El juego CES Pinball fue creado con la intención de inco
 ,"También se tiene en la pantalla la ventana de about o acerca por si desea conocer más sobre los creadores."]
 
 
+# Función separar_texto_info inicial.
+# Esta función busca que el texto que aparece en la ventana de ayuda sea legible.
+
+def sep_texto_info_inicial():
+    character_quantity = ""
+    texto_final = []
+    texto_total = ""
+    for cadena in texto_info_inicial:
+        texto_total += cadena
+
+    while texto_total != "" and len(texto_total) < 120:
+        for indice, caracter in enumerate(texto_total):
+            character_quantity += caracter
+            if len(character_quantity) >= 120 and (caracter == " " or caracter == "," or caracter == "."):
+                texto_final += [character_quantity]
+                texto_total = texto_total[len(character_quantity):]
+                character_quantity = ""
+                break
+    texto_final += texto_total
+    return texto_final
+
+print(sep_texto_info_inicial())
+
+
 # Falta trabajar en el texto.
 def info_inicial():
     global blanco, negro
@@ -279,7 +303,8 @@ def info_inicial():
         sobre_el_juego = font.render("Sobre el juego: Ces Pinball", True, blanco)    
         ventana_info_inicial.blit(sobre_el_juego, (10, 10))  # Adjust the position as needed
         espacio_inter = 30
-        for texto in texto_info_inicial:
+        texto_desplegar = sep_texto_info_inicial
+        for texto in texto_desplegar:
             texto_imp = font.render(texto, True, blanco)
             ventana_info_inicial.blit(texto_imp, (10, espacio_inter))
             espacio_inter += 20
